@@ -80,18 +80,31 @@ class particle {
     this.y = y
     this.r = radius
     this.color = color
+  this.opacity=0
   }
 
   draw() {
     c.beginPath()
     c.arc(this.x, this.y, this.r, 0, Math.PI * 2, false)
-    c.fillStyle = this.color
-    c.fill()
-    c.closePath()
+   c.save();
+   c.globalAlpha=this.opacity;
+    c.fillStyle = this.color;
+    c.fill();
+   c.restore();
+    c.strokeStyle=this.color;
     c.stroke()
+    c.closePath()
   }
 
   update(particles) {   this.draw();
+
+    if (distance(this.x,this.y,mouse.x,mouse.y)<100 && this.opacity<0.2){
+      this.opacity+=0.02; }
+    else if (this.opacity>0){
+      this.opacity-=0.02;
+      this.opacity=Math.max(0,this.opacity);
+    }
+
 
     for(let i=0;i<particles.length;i++){
     if (this==particles[i]) {
@@ -121,7 +134,7 @@ class particle {
 function init() {
   particles = []
 console.log("i am at init start");
-  for (let i = 0; i < 150; i++) {
+  for (let i = 0; i < 400; i++) {
     const r=20;
     let x=randomIntFromRange(r,canvas.width-r);
     let y=randomIntFromRange(r,canvas.height-r);
